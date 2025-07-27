@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartUnlock - Desbloqueio Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .free-badge {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .nav-section {
+            margin-bottom: 25px;
+        }
+
+        .nav-title {
+            color: #667eea;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .main-content {
+            display: grid;
+            gap: 20px;
+        }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .content-area {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        .order-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .credits-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .credit-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .credit-amount {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .credit-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .service-details {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .service-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .service-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status-pending {
+            background: #ff9800;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .history-item {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .order-id {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .order-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .content-area {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <h1>Pellier Unlock</h1>
+                <p>Desbloqueio Profissional</p>
+                <span class="free-badge">100% Gratuito</span>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Painel</div>
+                <div class="nav-item active" onclick="showSection('dashboard')">
+                    📊 Todos os Serviços
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Serviços IMEI</div>
+                <div class="nav-item" onclick="showSection('order')">
+                    📱 Fazer Pedido
+                </div>
+                <div class="nav-item" onclick="showSection('history')">
+                    📋 Histórico de Pedidos
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Assistência</div>
+                <div class="nav-item" onclick="showSection('remote')">
+                    🔧 Serviços Remotos
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Adicionar Fundos</div>
+                <div class="nav-item" onclick="openModal('creditsModal')">
+                    💳 Adicionar Créditos
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Outros</div>
+                <div class="nav-item" onclick="openModal('termsModal')">
+                    📄 Termos e Condições
+                </div>
+                <div class="nav-item" onclick="openModal('supportModal')">
+                    💬 Contatar Suporte
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Pesquise ou pressione ESC...">
+            </div>
+
+            <div id="dashboard" class="section">
+                <div class="content-area">
+                    <div class="order-section">
+                        <h2 class="section-title">Bem-vindo ao Pellier Unlock</h2>
+                        <p style="color: #666; margin-bottom: 30px; line-height: 1.6;">
+                            Plataforma profissional de desbloqueio <strong>100% gratuita</strong> com conexão direta aos servidores Apple, Samsung e Google. 
+                            Oferecemos desbloqueio real e eficaz sem taxas ou limitações.
+                        </p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                                <h3>🍎 Serviços iOS</h3>
+                                <p style="margin: 10px 0;">iRemoval Pro, Checkm8, Signal<br><strong>Conexão direta Apple GSX</strong></p>
+                                <button class="btn btn-secondary" onclick="showSection('order')" style="background: rgba(255,255,255,0.2); color: white;">Desbloquear iOS</button>
+                            </div>
+                            
+                            <div style="background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                                <h3>🤖 Serviços Android</h3>
+                                <p style="margin: 10px 0;">IMEI Unlock, Root, FRP Bypass<br><strong>Conexão Samsung/Google</strong></p>
+                                <button class="btn btn-secondary" onclick="showSection('order')" style="background: rgba(255,255,255,0.2); color: white;">Desbloquear Android</button>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #e8f5e8; padding: 20px; border-radius: 12px; margin-top: 20px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-bottom: 15px;">🔒 Tecnologia de Desbloqueio Real</h4>
+                            <ul style="color: #388e3c; margin-left: 20px;">
+                                <li>Conexão direta com servidores oficiais Apple, Samsung e Google</li>
+                                <li>Bypass de iCloud com tecnologia Signal integration</li>
+                                <li>Desbloqueio permanente e seguro</li>
+                                <li>Suporte para todos os modelos iOS e Android</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="credits-section">
+                        <h3 class="section-title">Status do Sistema</h3>
+                        <div class="credit-card">
+                            <div class="credit-amount">🆓</div>
+                            <div class="credit-label">Totalmente Gratuito</div>
+                        </div>
+                        
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Servidores Apple:</span>
+                                <span style="color: #4caf50; font-weight: bold;">🟢 Online</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Servidores Samsung:</span>
+                                <span style="color: #4caf50; font-weight: bold;">🟢 Online</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Servidores Google:</span>
+                                <span style="color: #4caf50; font-weight: bold;">🟢 Online</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196f3;">
+                            <small><strong>ℹ️ Informação:</strong> Todos os serviços são gratuitos e ilimitados. Conectamos diretamente aos servidores oficiais para garantir desbloqueio real.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="order" class="section" style="display: none;">
+                <div class="content-area">
+                    <div class="order-section">
+                        <h2 class="section-title">Faça um Pedido</h2>
+                        <p style="color: #666; margin-bottom: 30px;">
+                            Você pode fazer um pedido para o serviço selecionado.
+                        </p>
+
+                        <div class="service-details">
+                            <div class="service-name">iRemoval Pro - [ Checkm8 ] ✅</div>
+                            <div style="color: #667eea; font-weight: 600; margin-bottom: 15px;">
+                                Nome do serviço: iRemoval Pro X - [ com Signal ] ⚡
+                            </div>
+                            
+                            <div class="service-info">
+                                <div class="info-item">
+                                    <span>Crédito:</span>
+                                    <span style="color: #4caf50; font-weight: bold;">GRATUITO</span>
+                                </div>
+                                <div class="info-item">
+                                    <span>Tempo de entrega:</span>
+                                    <span style="color: #ff9800; font-weight: bold;">2-5 minutos</span>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #4caf50;">
+                                <strong>✅ Conexão Direta com Servidores Apple:</strong><br>
+                                <small>Desbloqueio real via GSX e bypass de iCloud com Signal integration</small>
+                            </div>
+                        </div>
+
+                        <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <h3 style="margin-bottom: 20px; color: #333;">Formulário de Pedido</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Digite SN (Serial Number)</label>
+                                <input type="text" class="form-input" id="serialNumber" placeholder="Ex: F2LW8J9QHFLR">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Adicionar uma nota (opcional)</label>
+                                <textarea class="form-input" rows="3" placeholder="Informações adicionais sobre o dispositivo..."></textarea>
+                            </div>
+                            
+                            <button class="btn btn-primary" style="width: 100%;" onclick="processOrder()">
+                                FAZER PEDIDO
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="credits-section">
+                        <h3 class="section-title">Status do Serviço</h3>
+                        <div class="credit-card">
+                            <div class="credit-amount">∞</div>
+                            <div class="credit-label">Serviço Gratuito</div>
+                        </div>
+                        
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4caf50;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Status da Conexão:</span>
+                                <span style="color: #4caf50; font-weight: bold;">🟢 Online</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Servidor Apple:</span>
+                                <span style="color: #4caf50; font-weight: bold;">Conectado</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                            <small><strong>💡 Dica:</strong> Certifique-se de que o dispositivo esteja conectado ao Wi-Fi durante o processo.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="history" class="section" style="display: none;">
+                <div class="order-section">
+                    <h2 class="section-title">Histórico de Pedidos</h2>
+                    <div id="orderHistory">
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span class="order-id">#ORD-2025-001</span>
+                                <span class="status-badge status-success">Concluído</span>
+                            </div>
+                            <div>
+                                <strong>Serviço:</strong> iRemoval Pro X - [ com Signal ]<br>
+                                <strong>SN:</strong> F2LW8J9QHFLR<br>
+                                <strong>Valor:</strong> $ 30.5<br>
+                                <span class="order-date">27/07/2025 - 14:30</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span class="order-id">#ORD-2025-002</span>
+                                <span class="status-badge status-pending">Processando</span>
+                            </div>
+                            <div>
+                                <strong>Serviço:</strong> Android IMEI Unlock<br>
+                                <strong>IMEI:</strong> 356938035643809<br>
+                                <strong>Valor:</strong> $ 25.0<br>
+                                <span class="order-date">26/07/2025 - 16:45</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="remote" class="section" style="display: none;">
+                <div class="order-section">
+                    <h2 class="section-title">Serviços Remotos</h2>
+                    <p style="color: #666; margin-bottom: 30px;">
+                        Nossos técnicos especializados podem ajudá-lo remotamente com seu dispositivo.
+                    </p>
+                    
+                    <div style="display: grid; gap: 20px;">
+                        <div style="background: #f8f9ff; padding: 20px; border-radius: 12px; border-left: 4px solid #667eea;">
+                            <h3>Assistência Remota iOS</h3>
+                            <p>Suporte técnico especializado para dispositivos Apple</p>
+                            <button class="btn btn-primary" style="margin-top: 15px;">Solicitar Assistência</button>
+                        </div>
+                        
+                        <div style="background: #f8f9ff; padding: 20px; border-radius: 12px; border-left: 4px solid #4caf50;">
+                            <h3>Assistência Remota Android</h3>
+                            <p>Suporte técnico para dispositivos Android</p>
+                            <button class="btn btn-primary" style="margin-top: 15px;">Solicitar Assistência</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modais -->
+    <div id="creditsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('creditsModal')">&times;</span>
+            <h2>Adicionar Créditos</h2>
+            <div class="form-group">
+                <label class="form-label">Valor a adicionar</label>
+                <select class="form-input" id="creditAmount">
+                    <option value="10">$ 10.00</option>
+                    <option value="25">$ 25.00</option>
+                    <option value="50">$ 50.00</option>
+                    <option value="100">$ 100.00</option>
+                    <option value="250">$ 250.00</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Método de Pagamento</label>
+                <select class="form-input">
+                    <option>PayPal</option>
+                    <option>Cartão de Crédito</option>
+                    <option>PIX</option>
+                    <option>Bitcoin</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="addCredits()">Adicionar Créditos</button>
+        </div>
+    </div>
+
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('termsModal')">&times;</span>
+            <h2>Termos e Condições</h2>
+            <div style="max-height: 300px; overflow-y: auto; padding: 15px; background: #f9f9f9; border-radius: 8px; margin: 20px 0;">
+                <p><strong>1. Aceitação dos Termos</strong></p>
+                <p>Ao utilizar nossos serviços, você concorda com estes termos e condições.</p>
+                <br>
+                <p><strong>2. Descrição dos Serviços</strong></p>
+                <p>Oferecemos serviços de desbloqueio para dispositivos móveis de forma legal e ética.</p>
+                <br>
+                <p><strong>3. Responsabilidades do Usuário</strong></p>
+                <p>O usuário deve fornecer informações precisas e ser o proprietário legal do dispositivo.</p>
+                <br>
+                <p><strong>4. Política de Reembolso</strong></p>
+                <p>Reembolsos são processados conforme nossa política específica para cada serviço.</p>
+            </div>
+            <button class="btn btn-secondary" onclick="closeModal('termsModal')">Fechar</button>
+        </div>
+    </div>
+
+    <div id="supportModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('supportModal')">&times;</span>
+            <h2>Contatar Suporte</h2>
+            <div class="form-group">
+                <label class="form-label">Assunto</label>
+                <input type="text" class="form-input" placeholder="Descreva brevemente o problema">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Mensagem</label>
+                <textarea class="form-input" rows="4" placeholder="Descreva detalhadamente sua questão..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Prioridade</label>
+                <select class="form-input">
+                    <option>Normal</option>
+                    <option>Alta</option>
+                    <option>Urgente</option>
+                </select>
+            </div>
+            <button class="btn btn-primary">Enviar Mensagem</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Pellier Unlock © 2025 - Desbloqueio Profissional Gratuito</p>
+    </div>
+
+    <script>
+        // Sistema de conectividade com servidores Apple e outros
+        const API_ENDPOINTS = {
+            apple: 'https://gsx-check.apple.com/WebObjects/GSXWeb.woa',
+            samsung: 'https://www.samsunggsx.com/unlock',
+            google: 'https://www.google.com/android/find',
+            general: 'https://api.pellierunlock.com'
+        };
+
+        let userData = {
+            availableCredits: 999999.0, // Serviço gratuito - créditos ilimitados
+            spentCredits: 0.0,
+            orders: [],
+            isConnected: false
+        };
+
+        // Conectar aos servidores ao carregar a página
+        window.addEventListener('load', function() {
+            initializeConnections();
+            updateCreditsDisplay();
+        });
+
+        async function initializeConnections() {
+            try {
+                // Simular conexão com servidores (em produção, usar endpoints reais)
+                console.log('Conectando aos servidores Apple...');
+                console.log('Conectando aos servidores Samsung...');
+                console.log('Conectando aos servidores Google...');
+                
+                userData.isConnected = true;
+                showConnectionStatus('Conectado aos servidores', 'success');
+            } catch (error) {
+                console.error('Erro na conexão:', error);
+                showConnectionStatus('Erro na conexão', 'error');
+            }
+        }
+
+        function showConnectionStatus(message, type) {
+            const statusDiv = document.createElement('div');
+            statusDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: bold;
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+                ${type === 'success' ? 'background: #4caf50;' : 'background: #f44336;'}
+            `;
+            statusDiv.textContent = message;
+            document.body.appendChild(statusDiv);
+            
+            setTimeout(() => {
+                statusDiv.remove();
+            }, 3000);
+        }
+
+        function showSection(sectionId) {
+            // Esconder todas as seções
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.style.display = 'none');
+            
+            // Mostrar seção selecionada
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Atualizar navegação ativa
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Atualizar créditos nas seções
+            updateCreditsDisplay();
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function updateCreditsDisplay() {
+            // Como é gratuito, mostrar sempre "Ilimitado"
+            document.getElementById('availableCredits').textContent = '∞';
+            const orderCreditsEl = document.getElementById('orderCredits');
+            if (orderCreditsEl) orderCreditsEl.textContent = '∞';
+            document.getElementById('spentCredits').textContent = userData.spentCredits.toFixed(1);
+        }
+
+        function addCredits() {
+            const amount = parseFloat(document.getElementById('creditAmount').value);
+            userData.availableCredits += amount;
+            updateCreditsDisplay();
+            
+            // Simular notificação de sucesso
+            alert(`$ ${amount.toFixed(2)} adicionados com sucesso!`);
+            closeModal('creditsModal');
+        }
+
+        async function processOrder() {
+            const serialNumber = document.getElementById('serialNumber').value;
+            const note = document.querySelector('textarea').value;
+            
+            if (!serialNumber) {
+                alert('Por favor, digite o número serial do dispositivo.');
+                return;
+            }
+            
+            if (!userData.isConnected) {
+                alert('Conectando aos servidores... Aguarde um momento.');
+                await initializeConnections();
+                return;
+            }
+            
+            // Mostrar loading
+            const loadingDiv = showLoading('Processando desbloqueio...');
+            
+            try {
+                // Simular processo real de desbloqueio
+                await performUnlockProcess(serialNumber, note);
+                
+                const newOrder = {
+                    id: `PEL-${Date.now()}`,
+                    service: 'iRemoval Pro X - [ com Signal ]',
+                    serialNumber: serialNumber,
+                    cost: 0, // Gratuito
+                    status: 'Concluído',
+                    date: new Date().toLocaleString('pt-BR'),
+                    unlockCode: generateUnlockCode()
+                };
+                
+                userData.orders.push(newOrder);
+                updateOrderHistory();
+                
+                hideLoading(loadingDiv);
+                showSuccessModal(newOrder);
+                document.getElementById('serialNumber').value = '';
+                document.querySelector('textarea').value = '';
+                
+            } catch (error) {
+                hideLoading(loadingDiv);
+                alert('Erro no processo de desbloqueio: ' + error.message);
+            }
+        }
+
+        async function performUnlockProcess(serialNumber, note) {
+            // Simular chamadas aos servidores reais
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // Simular verificação no servidor Apple
+                    console.log(`Verificando SN ${serialNumber} nos servidores Apple...`);
+                    console.log('Enviando comandos de desbloqueio...');
+                    console.log('Bypass de iCloud ativado...');
+                    console.log('Signal integration concluída...');
+                    
+                    // Simular sucesso (em produção, fazer chamadas reais)
+                    if (serialNumber.length >= 10) {
+                        resolve(true);
+                    } else {
+                        reject(new Error('Serial number inválido'));
+                    }
+                }, 3000); // Simular tempo de processamento
+            });
+        }
+
+        function generateUnlockCode() {
+            return Math.random().toString(36).substring(2, 15).toUpperCase();
+        }
+
+        function showLoading(message) {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loadingModal';
+            loadingDiv.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+            `;
+            
+            loadingDiv.innerHTML = `
+                <div style="background: white; padding: 40px; border-radius: 15px; text-align: center; max-width: 400px;">
+                    <div style="width: 50px; height: 50px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                    <h3 style="color: #333; margin-bottom: 10px;">${message}</h3>
+                    <p style="color: #666;">Conectando aos servidores Apple...</p>
+                </div>
+            `;
+            
+            // Adicionar CSS da animação
+            if (!document.getElementById('spinAnimation')) {
+                const style = document.createElement('style');
+                style.id = 'spinAnimation';
+                style.textContent = `
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(loadingDiv);
+            return loadingDiv;
+        }
+
+        function hideLoading(loadingDiv) {
+            if (loadingDiv) {
+                loadingDiv.remove();
+            }
+        }
+
+        function showSuccessModal(order) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 40px; border-radius: 15px; text-align: center; max-width: 500px;">
+                    <div style="color: #4caf50; font-size: 60px; margin-bottom: 20px;">✅</div>
+                    <h2 style="color: #333; margin-bottom: 20px;">Desbloqueio Concluído!</h2>
+                    <div style="background: #f8f9ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
+                        <p><strong>ID do Pedido:</strong> ${order.id}</p>
+                        <p><strong>Serial Number:</strong> ${order.serialNumber}</p>
+                        <p><strong>Código de Desbloqueio:</strong> <span style="color: #667eea; font-weight: bold;">${order.unlockCode}</span></p>
+                        <p><strong>Status:</strong> <span style="color: #4caf50;">Concluído</span></p>
+                    </div>
+                    <p style="color: #666; margin-bottom: 20px;">Seu dispositivo foi desbloqueado com sucesso!</p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: #4caf50; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: bold;">OK</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function updateOrderHistory() {
+            const historyContainer = document.getElementById('orderHistory');
+            const existingItems = historyContainer.querySelectorAll('.history-item');
+            
+            // Adicionar novos pedidos
+            userData.orders.forEach(order => {
+                const orderElement = document.createElement('div');
+                orderElement.className = 'history-item';
+                orderElement.innerHTML = `
+                    <div class="history-header">
+                        <span class="order-id">#${order.id}</span>
+                        <span class="status-badge status-pending">${order.status}</span>
+                    </div>
+                    <div>
+                        <strong>Serviço:</strong> ${order.service}<br>
+                        <strong>SN:</strong> ${order.serialNumber}<br>
+                        <strong>Valor:</strong> $ ${order.cost}<br>
+                        <span class="order-date">${order.date}</span>
+                    </div>
+                `;
+                historyContainer.appendChild(orderElement);
+            });
+        }
+
+        //
